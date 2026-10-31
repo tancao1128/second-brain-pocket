@@ -1,18 +1,18 @@
 // Pure functions: what each tab shows. No titles exist in the snapshot, so rows are labels, numbers and dates.
 export const TEXT = {
   vi: { appName: 'Second Brain Pocket', readOnly: 'chỉ đọc', today: 'Hôm nay', deadlines: 'Hạn chót', projects: 'Dự án', habits: 'Thói quen',
-    overdue: 'Quá hạn', due7: 'Trong 7 ngày', habitsDone: 'Thói quen', dueToday: 'Đến hạn hôm nay', unlock: 'Mở khoá', lock: 'Khoá', reload: 'Tải lại',
-    passphrase: 'Cụm mật khẩu', wrong: 'Sai cụm mật khẩu hoặc tệp bị đổi.', noData: 'Không có gì.', demo: 'Xem thử (dữ liệu giả)',
+    overdue: 'Quá hạn', due7: 'Trong 7 ngày', habitsDone: 'Thói quen', dueToday: 'Đến hạn hôm nay', reload: 'Tải lại',
+    noData: 'Không có gì.', 
     snapshotAt: 'Ảnh chụp lúc', old: 'Dữ liệu đã cũ', today0: 'hôm nay', inDays: (n) => `còn ${n} ngày`, lateDays: (n) => `trễ ${n} ngày`,
-    streak: 'chuỗi', habit: 'Thói quen', settings: 'Kết nối', save: 'Lưu', repo: 'Kho dữ liệu (chủ/tên)', branch: 'Nhánh', file: 'Tệp',
-    token: 'Mã đọc (chỉ đọc, có hạn)', fetchFail: 'Không tải được ảnh chụp.', events: 'Lịch hôm nay', Meeting: 'Họp', Class: 'Lớp', Deadline: 'Hạn chót',
+    streak: 'chuỗi', habit: 'Thói quen', 
+    fetchFail: 'Không tải được ảnh chụp.', events: 'Lịch hôm nay', Meeting: 'Họp', Class: 'Lớp', Deadline: 'Hạn chót',
     Task: 'Việc', Next: 'Chưa làm', Done: 'Xong', lang: 'EN' },
   en: { appName: 'Second Brain Pocket', readOnly: 'read-only', today: 'Today', deadlines: 'Deadlines', projects: 'Projects', habits: 'Habits',
-    overdue: 'Overdue', due7: 'Due in 7 days', habitsDone: 'Habits', dueToday: 'Due today', unlock: 'Unlock', lock: 'Lock', reload: 'Reload',
-    passphrase: 'Passphrase', wrong: 'Wrong passphrase, or the file was changed.', noData: 'Nothing.', demo: 'Try the demo (fake data)',
+    overdue: 'Overdue', due7: 'Due in 7 days', habitsDone: 'Habits', dueToday: 'Due today', reload: 'Reload',
+    noData: 'Nothing.', 
     snapshotAt: 'Snapshot at', old: 'Data is old', today0: 'today', inDays: (n) => `in ${n} days`, lateDays: (n) => `${n} days late`,
-    streak: 'streak', habit: 'Habit', settings: 'Connection', save: 'Save', repo: 'Data repository (owner/name)', branch: 'Branch', file: 'File',
-    token: 'Read token (read-only, with expiry)', fetchFail: 'Could not load the snapshot.', events: 'Calendar today', Meeting: 'Meeting', Class: 'Class',
+    streak: 'streak', habit: 'Habit', 
+    fetchFail: 'Could not load the snapshot.', events: 'Calendar today', Meeting: 'Meeting', Class: 'Class',
     Deadline: 'Deadline', Task: 'Task', Next: 'To do', Done: 'Done', lang: 'VI' },
 };
 

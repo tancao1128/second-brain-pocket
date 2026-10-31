@@ -1,21 +1,13 @@
-import { open } from './crypto.mjs';
 import { TEXT, isStale, strip, todayRows, deadlineRows, projectRows, habitRows } from './view.mjs';
 
+// Same pattern as the Atomic Habits app: the Mac writes a secret Gist, this page reads it. No sign-in needed to read.
+const GIST = 'https://api.github.com/gists/fc8ab1f68b2e2b78a9091269c5cc498a';
+const FILE = 'pocket.json';
 const $ = (id) => document.getElementById(id);
-const DEMO_PASSPHRASE = 'demo-fake-passphrase';
-const AUTO_LOCK_MS = 5 * 60 * 1000;
-// Held in memory only. Nothing about the passphrase, the key or the snapshot is written to any storage.
-let secret = null;     // the passphrase while unlocked
-let snap = null;       // the decrypted snapshot while unlocked
-let source = null;     // { demo: true } or { repo, branch, file, token }
+let snap = null;
 let tab = 'today';
 let lang = 'vi';
-let hiddenTimer = null;
-
-const store = {
-  get(k) { try { return localStorage.getItem(k) || ''; } catch { return ''; } },
-  set(k, v) { try { localStorage.setItem(k, v); } catch { /* storage blocked: the page still works */ } },
-};
+try { lang = localStorage.getItem('pocket.lang') === 'en' ? 'en' : 'vi'; } catch { /* storage blocked */ }
 const T = () => TEXT[lang];
 
 function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; }
@@ -36,21 +28,13 @@ function section(title, rows, t) {
 
 function render() {
   const t = T();
-  $('ro').textContent = t.readOnly;
-  $('lang').textContent = t.lang; $('reload').textContent = t.reload; $('lock').textContent = t.lock;
-  $('passLabel').textContent = t.passphrase; $('unlockBtn').textContent = t.unlock; $('demoBtn').textContent = t.demo;
-  $('connTitle').textContent = t.settings; $('repoLabel').textContent = t.repo; $('branchLabel').textContent = t.branch;
-  $('fileLabel').textContent = t.file; $('tokenLabel').textContent = t.token; $('saveConn').textContent = t.save;
-  const open_ = Boolean(snap);
-  $('gate').hidden = open_; $('app').hidden = !open_;
-  $('lock').hidden = !open_; $('reload').hidden = !open_;
-  $('stamp').textContent = open_ ? `${t.snapshotAt} ${snap.generated_at.replace('T', ' ').slice(0, 16)}` : '';
-  $('stale').hidden = !(open_ && isStale(snap));
-  $('stale').textContent = t.old;
-  const s = $('strip'); s.replaceChildren();
-  const tabs = $('tabs'); tabs.replaceChildren();
-  const panel = $('panel'); panel.replaceChildren();
-  if (!open_) return;
+  document.documentElement.lang = lang;
+  $('ro').textContent = t.readOnly; $('lang').textContent = t.lang; $('reload').textContent = t.reload;
+  $('stamp').textContent = snap ? `${t.snapshotAt} ${new Date(snap.generated_at).toLocaleString(lang === 'vi' ? 'vi-VN' : 'en-GB', { dateStyle: 'short', timeStyle: 'short' })}` : '';
+  $('stale').hidden = !(snap && isStale(snap)); $('stale').textContent = t.old;
+  const s = $('strip'), tabs = $('tabs'), panel = $('panel');
+  s.replaceChildren(); tabs.replaceChildren(); panel.replaceChildren();
+  if (!snap) return;
   strip(snap, t).forEach(([label, n]) => { const c = el('div', 'cell'); c.append(el('b', '', String(n)), el('span', '', label)); s.append(c); });
   [['today', t.today], ['deadlines', t.deadlines], ['projects', t.projects], ['habits', t.habits]].forEach(([id, label]) => {
     const b = el('button', '', label); b.setAttribute('role', 'tab'); b.setAttribute('aria-selected', String(id === tab));
@@ -72,55 +56,22 @@ function render() {
   }
 }
 
-async function fetchBlob(src) {
-  if (src.demo) return (await fetch('./demo/snapshot.enc.json', { cache: 'no-store' })).json();
-  const url = `https://api.github.com/repos/${src.repo}/contents/${encodeURIComponent(src.file)}?ref=${encodeURIComponent(src.branch)}`;
-  const res = await fetch(url, { cache: 'no-store', headers: { Accept: 'application/vnd.github.raw+json', Authorization: `Bearer ${src.token}` } });
-  if (!res.ok) throw new Error('fetch');
-  return res.json();
-}
-
-async function load(passphrase, src) {
-  const err = $('err'); err.hidden = true;
+async function load() {
+  $('err').hidden = true;
   try {
-    const blob = await fetchBlob(src);
-    snap = JSON.parse(await open(blob, passphrase));
-    secret = passphrase; source = src;
-    clearTimeout(hiddenTimer);
+    const res = await fetch(GIST, { cache: 'no-store', headers: { Accept: 'application/vnd.github+json' } });
+    if (!res.ok) throw new Error(String(res.status));
+    const file = (await res.json()).files[FILE];
+    const text = file.truncated ? await (await fetch(file.raw_url, { cache: 'no-store' })).text() : file.content;
+    snap = JSON.parse(text);
   } catch (e) {
-    err.textContent = e.message === 'wrong-passphrase' || e.message === 'bad-format' ? T().wrong : T().fetchFail;
-    err.hidden = false; snap = null; secret = null;
+    $('err').textContent = T().fetchFail; $('err').hidden = false;
   }
-  $('pass').value = '';
   render();
 }
 
-function lock() {
-  secret = null; snap = null; source = null; tab = 'today';
-  $('pass').value = ''; $('err').hidden = true;
-  render();
-}
-
-$('unlockForm').addEventListener('submit', (e) => {
-  e.preventDefault();
-  const src = { demo: false, repo: store.get('pocket.repo'), branch: store.get('pocket.branch') || 'snapshot', file: store.get('pocket.file') || 'snapshot.enc.json', token: store.get('pocket.token') };
-  load($('pass').value, src);
-});
-$('demoBtn').addEventListener('click', () => load(DEMO_PASSPHRASE, { demo: true }));
-$('reload').addEventListener('click', () => { if (secret && source) load(secret, source); });
-$('lock').addEventListener('click', lock);
-$('lang').addEventListener('click', () => { lang = lang === 'vi' ? 'en' : 'vi'; store.set('pocket.lang', lang); document.documentElement.lang = lang; render(); });
-$('saveConn').addEventListener('click', () => {
-  store.set('pocket.repo', $('repo').value.trim()); store.set('pocket.branch', $('branch').value.trim());
-  store.set('pocket.file', $('file').value.trim()); store.set('pocket.token', $('token').value.trim());
-  $('token').value = '';
-});
-document.addEventListener('visibilitychange', () => {
-  if (document.hidden) hiddenTimer = setTimeout(lock, AUTO_LOCK_MS); else clearTimeout(hiddenTimer);
-});
-addEventListener('pagehide', lock);
-
-lang = store.get('pocket.lang') === 'en' ? 'en' : 'vi';
-document.documentElement.lang = lang;
-$('repo').value = store.get('pocket.repo'); $('branch').value = store.get('pocket.branch') || 'snapshot'; $('file').value = store.get('pocket.file') || 'snapshot.enc.json';
+$('reload').addEventListener('click', load);
+$('lang').addEventListener('click', () => { lang = lang === 'vi' ? 'en' : 'vi'; try { localStorage.setItem('pocket.lang', lang); } catch { /* ignore */ } render(); });
+document.addEventListener('visibilitychange', () => { if (!document.hidden) load(); });
 render();
+load();

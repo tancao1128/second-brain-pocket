@@ -4,39 +4,24 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Second Brain">
 <meta name="theme-color" content="#0f1a2b">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self' https://api.github.com; manifest-src 'self'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src https://api.github.com https://gist.githubusercontent.com; manifest-src 'self'; base-uri 'none'; form-action 'none'">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg">
+<link rel="apple-touch-icon" href="icon.svg">
 <link rel="stylesheet" href="pocket.css">
 <title>Second Brain Pocket</title>
 </head>
 <body>
 <header>
-  <div><strong id="appName">Second Brain Pocket</strong> <span class="pill" id="ro"></span><div id="stamp" class="muted"></div></div>
-  <div class="bar">
-    <button id="reload" hidden></button><button id="lang"></button><button id="lock" hidden></button>
-  </div>
+  <div><strong>Second Brain</strong> <span class="pill" id="ro"></span><div id="stamp" class="muted"></div></div>
+  <div class="bar"><button id="reload"></button><button id="lang"></button></div>
 </header>
 <p id="stale" class="warn" hidden></p>
-<main id="gate">
-  <form id="unlockForm" autocomplete="off">
-    <label for="pass" id="passLabel"></label>
-    <input id="pass" type="password" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="text">
-    <button type="submit" id="unlockBtn" class="primary"></button>
-    <button type="button" id="demoBtn"></button>
-    <p id="err" class="warn" hidden></p>
-  </form>
-  <details id="conn"><summary id="connTitle"></summary>
-    <label id="repoLabel" for="repo"></label><input id="repo" autocomplete="off" autocapitalize="off" spellcheck="false">
-    <label id="branchLabel" for="branch"></label><input id="branch" autocomplete="off" autocapitalize="off" spellcheck="false">
-    <label id="fileLabel" for="file"></label><input id="file" autocomplete="off" autocapitalize="off" spellcheck="false">
-    <label id="tokenLabel" for="token"></label><input id="token" type="password" autocomplete="off" autocapitalize="off" spellcheck="false">
-    <button type="button" id="saveConn"></button>
-  </details>
-</main>
-<main id="app" hidden>
+<p id="err" class="warn" hidden></p>
+<main>
   <section id="strip"></section>
   <nav id="tabs"></nav>
   <section id="panel"></section>
