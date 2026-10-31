@@ -1,4 +1,4 @@
-import { TEXT, isStale, strip, todayRows, deadlineRows, projectRows, habitRows } from './view.mjs';
+import { TEXT, isStale, strip, todayRows, deadlineRows, projectRows, habitRows } from './view.mjs?v=3';
 
 // Same pattern as the Atomic Habits app: the Mac writes a secret Gist, this page reads it. No sign-in needed to read.
 const GIST = 'https://api.github.com/gists/fc8ab1f68b2e2b78a9091269c5cc498a';
