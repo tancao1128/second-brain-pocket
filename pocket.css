@@ -1,0 +1,29 @@
+:root { --bg:#f4f6fa; --card:#fff; --ink:#14233a; --muted:#5d6b80; --line:#dbe1ea; --accent:#1b7f99; --warn:#b3261e; --dot:#cfd6e0; }
+@media (prefers-color-scheme: dark) { :root { --bg:#0f1a2b; --card:#17263c; --ink:#e8eef7; --muted:#9db0c8; --line:#2a3b55; --accent:#3fc1de; --warn:#ff8a80; --dot:#2f4160; } }
+* { box-sizing: border-box; }
+body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.4 -apple-system, system-ui, sans-serif; padding:env(safe-area-inset-top) 16px env(safe-area-inset-bottom); max-width:480px; margin-inline:auto; }
+header { display:flex; justify-content:space-between; align-items:flex-start; gap:8px; padding:12px 0; }
+.bar { display:flex; gap:6px; }
+button { white-space:nowrap; font:inherit; min-height:44px; padding:0 12px; border:1px solid var(--line); border-radius:10px; background:var(--card); color:var(--ink); }
+button.primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+.pill { font-size:12px; border:1px solid var(--line); border-radius:99px; padding:2px 8px; color:var(--muted); }
+.muted { color:var(--muted); font-size:13px; }
+.warn { color:var(--warn); }
+input { width:100%; min-height:44px; font:inherit; padding:0 10px; border:1px solid var(--line); border-radius:10px; background:var(--card); color:var(--ink); margin:4px 0 12px; }
+label { display:block; font-size:14px; color:var(--muted); }
+#unlockForm button { width:100%; margin-top:8px; }
+details { margin-top:20px; }
+#strip { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+.cell { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:8px 6px; text-align:center; }
+.cell b { display:block; font-size:22px; }
+.cell span { font-size:11px; color:var(--muted); }
+nav { display:flex; gap:6px; margin:14px 0 10px; }
+nav button { flex:1; padding:0 4px; font-size:14px; }
+nav button[aria-selected="true"] { background:var(--accent); color:#fff; border-color:var(--accent); }
+.row { display:flex; justify-content:space-between; gap:8px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px; margin-bottom:8px; }
+.row small { color:var(--muted); }
+.row.late { border-color:var(--warn); }
+.dots { display:flex; gap:4px; align-items:center; }
+.dots i { width:12px; height:12px; border-radius:50%; background:var(--dot); }
+.dots i.on { background:var(--accent); }
+h2 { font-size:13px; letter-spacing:.04em; text-transform:uppercase; color:var(--muted); margin:14px 0 6px; }
