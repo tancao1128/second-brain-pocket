@@ -5,14 +5,14 @@ export const TEXT = {
     noData: 'Không có gì.', 
     snapshotAt: 'Ảnh chụp lúc', old: 'Dữ liệu đã cũ', today0: 'hôm nay', inDays: (n) => `còn ${n} ngày`, lateDays: (n) => `trễ ${n} ngày`,
     streak: 'chuỗi', habit: 'Thói quen', 
-    fetchFail: 'Không tải được ảnh chụp.', events: 'Lịch hôm nay', Meeting: 'Họp', Class: 'Lớp', Deadline: 'Hạn chót',
+    fetchFail: 'Không tải được ảnh chụp.', needLink: 'Mở trang bằng link riêng một lần để kết nối.', events: 'Lịch hôm nay', Meeting: 'Họp', Class: 'Lớp', Deadline: 'Hạn chót',
     Task: 'Việc', Next: 'Chưa làm', Done: 'Xong', lang: 'EN' },
   en: { appName: 'Second Brain Pocket', readOnly: 'read-only', today: 'Today', deadlines: 'Deadlines', projects: 'Projects', habits: 'Habits',
     overdue: 'Overdue', due7: 'Due in 7 days', habitsDone: 'Habits', dueToday: 'Due today', reload: 'Reload',
     noData: 'Nothing.', 
     snapshotAt: 'Snapshot at', old: 'Data is old', today0: 'today', inDays: (n) => `in ${n} days`, lateDays: (n) => `${n} days late`,
     streak: 'streak', habit: 'Habit', 
-    fetchFail: 'Could not load the snapshot.', events: 'Calendar today', Meeting: 'Meeting', Class: 'Class',
+    fetchFail: 'Could not load the snapshot.', needLink: 'Open the page once with your private link to connect it.', events: 'Calendar today', Meeting: 'Meeting', Class: 'Class',
     Deadline: 'Deadline', Task: 'Task', Next: 'To do', Done: 'Done', lang: 'VI' },
 };
 

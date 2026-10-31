@@ -28,15 +28,15 @@ test('views show labels, not titles', () => {
   assert.equal(habitRows(SNAP, t)[0].label, 'Habit 1');
 });
 
-test('the page builds the DOM without innerHTML and stores only the language', () => {
+test('the page builds the DOM without innerHTML and stores only the language and the Gist id', () => {
   const js = read('pocket.js');
   assert.doesNotMatch(js, /sessionStorage|indexedDB|innerHTML|insertAdjacentHTML|document\.cookie/);
-  assert.deepEqual([...js.matchAll(/localStorage\.(?:get|set)Item\('([^']+)'/g)].map((m) => m[1]), ['pocket.lang', 'pocket.lang']);
+  assert.deepEqual([...js.matchAll(/localStorage\.(?:get|set)Item\('([^']+)'/g)].map((m) => m[1]), ['pocket.lang', 'pocket.gist', 'pocket.gist', 'pocket.lang']);
 });
 
 test('the page holds no token, path or personal name', () => {
   for (const f of ['index.html', 'pocket.js', 'view.mjs', 'manifest.webmanifest']) {
-    assert.doesNotMatch(read(f), /\/Users\/|ghp_|github_pat_|tancao|@gmail|sunykorea/i, f);
+    assert.doesNotMatch(read(f), /\/Users\/|ghp_|github_pat_|tancao|@gmail|sunykorea|[0-9a-f]{32}/i, f);
   }
   assert.match(read('index.html'), /connect-src https:\/\/api\.github\.com https:\/\/gist\.githubusercontent\.com;/);
 });

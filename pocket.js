@@ -1,13 +1,19 @@
-import { TEXT, isStale, strip, todayRows, deadlineRows, projectRows, habitRows } from './view.mjs?v=3';
+import { TEXT, isStale, strip, todayRows, deadlineRows, projectRows, habitRows } from './view.mjs?v=4';
 
-// Same pattern as the Atomic Habits app: the Mac writes a secret Gist, this page reads it. No sign-in needed to read.
-const GIST = 'https://api.github.com/gists/fc8ab1f68b2e2b78a9091269c5cc498a';
+// The Mac writes a secret Gist and this page reads it. The Gist id is not in this public code: Tan opens a private
+// link once (…/#g=<id>), the page keeps the id in this phone's storage and removes it from the address bar.
 const FILE = 'pocket.json';
 const $ = (id) => document.getElementById(id);
 let snap = null;
 let tab = 'today';
 let lang = 'vi';
-try { lang = localStorage.getItem('pocket.lang') === 'en' ? 'en' : 'vi'; } catch { /* storage blocked */ }
+let gist = '';
+try {
+  lang = localStorage.getItem('pocket.lang') === 'en' ? 'en' : 'vi';
+  const linked = /^#g=([0-9a-f]{20,40})$/.exec(location.hash);
+  if (linked) { localStorage.setItem('pocket.gist', linked[1]); history.replaceState(null, '', location.pathname); }
+  gist = localStorage.getItem('pocket.gist') || '';
+} catch { /* storage blocked */ }
 const T = () => TEXT[lang];
 
 function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; }
@@ -58,8 +64,9 @@ function render() {
 
 async function load() {
   $('err').hidden = true;
+  if (!gist) { $('err').textContent = T().needLink; $('err').hidden = false; render(); return; }
   try {
-    const res = await fetch(GIST, { cache: 'no-store', headers: { Accept: 'application/vnd.github+json' } });
+    const res = await fetch(`https://api.github.com/gists/${gist}`, { cache: 'no-store', headers: { Accept: 'application/vnd.github+json' } });
     if (!res.ok) throw new Error(String(res.status));
     const file = (await res.json()).files[FILE];
     const text = file.truncated ? await (await fetch(file.raw_url, { cache: 'no-store' })).text() : file.content;
