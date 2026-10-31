@@ -1,4 +1,4 @@
-import { TEXT, isStale, strip, todayRows, deadlineRows, projectRows, habitRows } from './view.mjs?v=4';
+import { TEXT, isStale, strip, todayRows, deadlineRows, projectRows, habitRows } from './view.mjs?v=5';
 
 // The Mac writes a secret Gist and this page reads it. The Gist id is not in this public code: Tan opens a private
 // link once (…/#g=<id>), the page keeps the id in this phone's storage and removes it from the address bar.
@@ -35,7 +35,7 @@ function section(title, rows, t) {
 function render() {
   const t = T();
   document.documentElement.lang = lang;
-  $('ro').textContent = t.readOnly; $('lang').textContent = t.lang; $('reload').textContent = t.reload;
+  $('ro').textContent = t.readOnly; $('lang').textContent = t.lang; $('reload').textContent = t.reload; $('source').textContent = t.source;
   $('stamp').textContent = snap ? `${t.snapshotAt} ${new Date(snap.generated_at).toLocaleString(lang === 'vi' ? 'vi-VN' : 'en-GB', { dateStyle: 'short', timeStyle: 'short' })}` : '';
   $('stale').hidden = !(snap && isStale(snap)); $('stale').textContent = t.old;
   const s = $('strip'), tabs = $('tabs'), panel = $('panel');
@@ -78,6 +78,14 @@ async function load() {
 }
 
 $('reload').addEventListener('click', load);
+$('source').addEventListener('click', () => {
+  const given = prompt(T().askLink, '') || '';
+  const id = (/([0-9a-f]{20,40})\/?\s*$/.exec(given.trim()) || [])[1];
+  if (!id) return;
+  gist = id;
+  try { localStorage.setItem('pocket.gist', id); } catch { /* storage blocked: keep it for this visit */ }
+  load();
+});
 $('lang').addEventListener('click', () => { lang = lang === 'vi' ? 'en' : 'vi'; try { localStorage.setItem('pocket.lang', lang); } catch { /* ignore */ } render(); });
 document.addEventListener('visibilitychange', () => { if (!document.hidden) load(); });
 render();

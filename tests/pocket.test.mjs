@@ -31,7 +31,7 @@ test('views show labels, not titles', () => {
 test('the page builds the DOM without innerHTML and stores only the language and the Gist id', () => {
   const js = read('pocket.js');
   assert.doesNotMatch(js, /sessionStorage|indexedDB|innerHTML|insertAdjacentHTML|document\.cookie/);
-  assert.deepEqual([...js.matchAll(/localStorage\.(?:get|set)Item\('([^']+)'/g)].map((m) => m[1]), ['pocket.lang', 'pocket.gist', 'pocket.gist', 'pocket.lang']);
+  assert.deepEqual([...js.matchAll(/localStorage\.(?:get|set)Item\('([^']+)'/g)].map((m) => m[1]), ['pocket.lang', 'pocket.gist', 'pocket.gist', 'pocket.gist', 'pocket.lang']);
 });
 
 test('the page holds no token, path or personal name', () => {
